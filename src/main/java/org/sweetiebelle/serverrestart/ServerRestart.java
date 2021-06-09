@@ -24,6 +24,7 @@
 
 package org.sweetiebelle.serverrestart;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.function.Supplier;
 
@@ -36,7 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
@@ -45,28 +45,35 @@ public class ServerRestart {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
     private Timer timer;
-    private ServerRestartConfig config;
 
     public ServerRestart() {
-        ModLoadingContext.get().registerConfig(Type.SERVER, ServerRestartConfig.SERVER_SPEC);
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+        Config.load();
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         timer = new Timer();
-        config = new ServerRestartConfig();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
     public void onServerFinished(FMLServerStartedEvent event) {
-        final long shutdownIn = config.shutdownLength * 1000;
+        final long shutdownIn = Config.SERVER.shutdownLength.get() * 1000;
         timer.schedule(new KillServerTask(), shutdownIn);
-        LOGGER.info("Restarting server in " + (config.shutdownLength / 60) + " minutes.");
-        if (config.shutdownMessages == null)
+        LOGGER.info("Restarting server in " + (shutdownIn / 60 / 1000) + " minutes.");
+        ArrayList<ShutdownMessage> shutdownMessages = Config.SERVER.getMessages();
+        if (isEmpty(shutdownMessages))
             throw new NullPointerException("ServerRestartConfig.shutdownMessages");
-        config.shutdownMessages.forEach((message) ->  {
+        shutdownMessages.forEach((message) -> {
             final long announceIn = message.time * 1000L;
             final long timeToPush = shutdownIn - announceIn;
             LOGGER.info(String.format("shutdownIn = %d, announceIn = %d, timeToPush = %d%n", shutdownIn, announceIn, timeToPush));
             timer.schedule(new AnnounceTask(message.message), timeToPush);
         });
+    }
+
+    public static boolean isEmpty(ArrayList<?> list) {
+        if (list == null)
+            return true;
+        if (list.size() < 1)
+            return true;
+        return false;
     }
 }

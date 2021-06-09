@@ -25,47 +25,45 @@
 package org.sweetiebelle.serverrestart;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig.Type;
 
-public class ServerRestartConfig {
+public class Config {
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
-    public long shutdownLength;
-    public ArrayList<ShutdownMessage> shutdownMessages;
-    
+
     static {
-        Pair<ServerConfig, ForgeConfigSpec> specPair = (new Builder()).configure(ServerRestartConfig.ServerConfig::new);
+        Pair<ServerConfig, ForgeConfigSpec> specPair = (new Builder()).configure(Config.ServerConfig::new);
         SERVER_SPEC = specPair.getRight();
         SERVER = specPair.getLeft();
     }
-    
-    public ServerRestartConfig() {
-        shutdownLength = SERVER.shutdownLength.get();
-        shutdownMessages = ShutdownMessage.from(SERVER.shutdownMessages.get());
-        shutdownMessages.sort(null);
-        Collections.reverse(shutdownMessages);
+
+    public static void load() {
+        ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC);
     }
-    
-    
+
     public static class ServerConfig {
 
-        public ConfigValue<ArrayList<String>> shutdownMessages;
+        private ConfigValue<ArrayList<String>> shutdownMessages;
         public ConfigValue<Long> shutdownLength;
 
         ServerConfig(Builder builder) {
-           builder.push("settings");
-           this.shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
-           this.shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
-           builder.pop();
+            builder.push("settings");
+            this.shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
+            this.shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
+            builder.pop();
         }
         
-        private static ArrayList<String> getDefaultShutdownMessages() {
+        public ArrayList<ShutdownMessage> getMessages() {
+            return ShutdownMessage.from(shutdownMessages.get());
+        }
+
+        private ArrayList<String> getDefaultShutdownMessages() {
             ArrayList<String> map = new ArrayList<String>();
             map.add("3600|The server will restart in 60 minutes.");
             map.add("900|The server will restart in 15 minutes.");
@@ -79,5 +77,5 @@ public class ServerRestartConfig {
             map.add("0|Server restarting now!");
             return map;
         }
-     }
+    }
 }

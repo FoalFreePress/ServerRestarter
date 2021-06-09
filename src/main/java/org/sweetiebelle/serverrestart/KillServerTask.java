@@ -26,17 +26,13 @@ package org.sweetiebelle.serverrestart;
 
 import java.util.TimerTask;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class KillServerTask extends TimerTask {
 
     @Override
     public void run() {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server instanceof DedicatedServer)
-            ((DedicatedServer) server).stopServer();
+        ServerLifecycleHooks.getCurrentServer().halt(false);
     }
 
 }

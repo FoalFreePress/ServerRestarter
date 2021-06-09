@@ -26,9 +26,9 @@ package org.sweetiebelle.serverrestart;
 
 import java.util.ArrayList;
 
-public class ShutdownMessage implements Comparable<ShutdownMessage>{
+public class ShutdownMessage implements Comparable<ShutdownMessage> {
     public static ArrayList<ShutdownMessage> from(ArrayList<String> oldMessages) {
-        if(oldMessages == null || oldMessages.size() < 1)
+        if (ServerRestart.isEmpty(oldMessages))
             throw new NullPointerException("oldMessages is null or empty.");
         ArrayList<ShutdownMessage> messages = new ArrayList<ShutdownMessage>(oldMessages.size());
         for (String message : oldMessages)
