@@ -62,10 +62,7 @@ public class ServerRestart {
         if (isEmpty(shutdownMessages))
             throw new NullPointerException("ServerRestartConfig.shutdownMessages");
         shutdownMessages.forEach((message) -> {
-            final long announceIn = message.time * 1000L;
-            final long timeToPush = shutdownIn - announceIn;
-            LOGGER.info(String.format("shutdownIn = %d, announceIn = %d, timeToPush = %d%n", shutdownIn, announceIn, timeToPush));
-            timer.schedule(new AnnounceTask(message.message), timeToPush);
+            timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L));
         });
     }
 
