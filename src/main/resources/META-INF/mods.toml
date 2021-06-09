@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="${loader_range}"
+license="MIT license. See LICENSE.txt for a copy."
+
+[[mods]]
+    modId="serverrestart" 
+    version="${version}"
+    displayName="Server Restart"
+    authors="shroomdog27"
+    description='''
+    Adds simple four different tiered backpacks.
+    '''
+
+[[dependencies.serverrestart]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.serverrestart]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_range}"
+    ordering="NONE"
+    side="BOTH"
