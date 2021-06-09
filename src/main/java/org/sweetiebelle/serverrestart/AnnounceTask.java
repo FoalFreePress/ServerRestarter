@@ -24,19 +24,34 @@
 
 package org.sweetiebelle.serverrestart;
 
+import java.util.Objects;
 import java.util.TimerTask;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-public class KillServerTask extends TimerTask {
+public class AnnounceTask extends TimerTask {
+
+    private String message;
+    private static final Color COLOR = Color.fromRgb(16711935); // #FF00FF
+    private static final Style STYLE = Style.EMPTY.withColor(COLOR).withFont(Style.DEFAULT_FONT);
+
+    public AnnounceTask(@Nonnull String message) {
+        this.message = Objects.requireNonNull(message);
+    }
 
     @Override
     public void run() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server instanceof DedicatedServer)
-            ((DedicatedServer) server).stopServer();
+            ((DedicatedServer) server).sendMessage(new StringTextComponent(message).withStyle(STYLE), null);
     }
 
 }

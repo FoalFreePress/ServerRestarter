@@ -147,7 +147,7 @@ task replaceResources {
 }
 
 processResources {
-    exclude 'META-INF/mods.toml'
+   // exclude 'META-INF/mods.toml'
     finalizedBy replaceResources
 }
 

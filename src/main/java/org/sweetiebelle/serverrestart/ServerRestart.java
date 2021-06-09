@@ -31,24 +31,42 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod(ServerRestart.MOD_ID)
 public class ServerRestart {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
-    private static final long TIME_TO_SLEEP = 60 * 60 * 6 * 1000; // 6 hours in milliseconds.
     private Timer timer;
+    private ServerRestartConfig config;
 
     public ServerRestart() {
-        LOGGER.error("HELLO MINECRAFT", new RuntimeException());
-        ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(Type.SERVER, ServerRestartConfig.SERVER_SPEC);
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         timer = new Timer();
-        timer.schedule(new KillServerTask(), TIME_TO_SLEEP);
+        config = new ServerRestartConfig();
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onServerFinished(FMLServerStartedEvent event) {
+        final long shutdownIn = config.shutdownLength * 1000;
+        timer.schedule(new KillServerTask(), shutdownIn);
+        LOGGER.info("Restarting server in " + (config.shutdownLength / 60) + " minutes.");
+        if (config.shutdownMessages == null)
+            throw new NullPointerException("ServerRestartConfig.shutdownMessages");
+        config.shutdownMessages.forEach((message) ->  {
+            final long announceIn = message.time * 1000L;
+            final long timeToPush = shutdownIn - announceIn;
+            LOGGER.info(String.format("shutdownIn = %d, announceIn = %d, timeToPush = %d%n", shutdownIn, announceIn, timeToPush));
+            timer.schedule(new AnnounceTask(message.message), timeToPush);
+        });
     }
 }

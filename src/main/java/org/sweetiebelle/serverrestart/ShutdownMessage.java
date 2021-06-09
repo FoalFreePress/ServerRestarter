@@ -24,19 +24,35 @@
 
 package org.sweetiebelle.serverrestart;
 
-import java.util.TimerTask;
+import java.util.ArrayList;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
-
-public class KillServerTask extends TimerTask {
-
-    @Override
-    public void run() {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server instanceof DedicatedServer)
-            ((DedicatedServer) server).stopServer();
+public class ShutdownMessage implements Comparable<ShutdownMessage>{
+    public static ArrayList<ShutdownMessage> from(ArrayList<String> oldMessages) {
+        if(oldMessages == null || oldMessages.size() < 1)
+            throw new NullPointerException("oldMessages is null or empty.");
+        ArrayList<ShutdownMessage> messages = new ArrayList<ShutdownMessage>(oldMessages.size());
+        for (String message : oldMessages)
+            messages.add(ShutdownMessage.from(message));
+        return messages;
     }
 
+    public static ShutdownMessage from(String combined) {
+        String[] parts = combined.split("\\|");
+        if (parts.length != 2)
+            throw new IllegalArgumentException("Bad format. String contains multiple pipe characters.");
+        return new ShutdownMessage(Long.valueOf(parts[0]), parts[1]);
+    }
+
+    public String message;
+    public Long time;
+
+    public ShutdownMessage(long time, String message) {
+        this.time = time;
+        this.message = message;
+    }
+
+    @Override
+    public int compareTo(ShutdownMessage o) {
+        return time.compareTo(o.time);
+    }
 }
