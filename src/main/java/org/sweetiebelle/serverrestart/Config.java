@@ -49,7 +49,7 @@ public class Config {
 
     public static class ServerConfig {
 
-        private ConfigValue<ArrayList<String>> shutdownMessages;
+        public ConfigValue<ArrayList<String>> shutdownMessages;
         public ConfigValue<Long> shutdownLength;
 
         ServerConfig(Builder builder) {
@@ -57,10 +57,6 @@ public class Config {
             this.shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
             this.shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
             builder.pop();
-        }
-        
-        public ArrayList<ShutdownMessage> getMessages() {
-            return ShutdownMessage.from(shutdownMessages.get());
         }
 
         private ArrayList<String> getDefaultShutdownMessages() {

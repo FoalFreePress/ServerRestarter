@@ -24,7 +24,9 @@
 
 package org.sweetiebelle.serverrestart;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.function.Supplier;
 
@@ -40,13 +42,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
-@Mod(ServerRestart.MOD_ID)
-public class ServerRestart {
+@Mod(ServerRestartMod.MOD_ID)
+public class ServerRestartMod {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
     private Timer timer;
 
-    public ServerRestart() {
+    public ServerRestartMod() {
         Config.load();
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         timer = new Timer();
@@ -56,21 +58,18 @@ public class ServerRestart {
     @SubscribeEvent
     public void onServerFinished(FMLServerStartedEvent event) {
         final long shutdownIn = Config.SERVER.shutdownLength.get() * 1000;
+
         timer.schedule(new KillServerTask(), shutdownIn);
-        LOGGER.info("Restarting server in " + (shutdownIn / 60 / 1000) + " minutes.");
-        ArrayList<ShutdownMessage> shutdownMessages = Config.SERVER.getMessages();
-        if (isEmpty(shutdownMessages))
-            throw new NullPointerException("ServerRestartConfig.shutdownMessages");
-        shutdownMessages.forEach((message) -> {
-            timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L));
-        });
+
+        printLog(shutdownIn);
+
+        
+        Util.from(Config.SERVER.shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
     }
 
-    public static boolean isEmpty(ArrayList<?> list) {
-        if (list == null)
-            return true;
-        if (list.size() < 1)
-            return true;
-        return false;
+    private void printLog(long shutdownIn) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        format.setTimeZone(TimeZone.getDefault());
+        LOGGER.info(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
     }
 }
