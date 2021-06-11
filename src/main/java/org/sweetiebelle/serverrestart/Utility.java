@@ -26,12 +26,12 @@ package org.sweetiebelle.serverrestart;
 
 import java.util.ArrayList;
 
-public class Util {
+public class Utility {
 
     static ArrayList<ShutdownMessage> from(ArrayList<String> oldMessages) {
         ArrayList<ShutdownMessage> messages = new ArrayList<ShutdownMessage>(oldMessages.size());
         for (String message : oldMessages)
-            messages.add(Util.from(message));
+            messages.add(Utility.from(message));
         return messages;
     }
 

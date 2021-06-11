@@ -29,8 +29,8 @@ import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -49,9 +49,7 @@ public class AnnounceTask extends TimerTask {
 
     @Override
     public void run() {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        if (server instanceof DedicatedServer)
-            ((DedicatedServer) server).sendMessage(new StringTextComponent(message).withStyle(STYLE), null);
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message).withStyle(STYLE), ChatType.SYSTEM, Util.NIL_UUID);
     }
 
 }

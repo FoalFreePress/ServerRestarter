@@ -64,7 +64,7 @@ public class ServerRestartMod {
         printLog(shutdownIn);
 
         
-        Util.from(Config.SERVER.shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
+        Utility.from(Config.SERVER.shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
     }
 
     private void printLog(long shutdownIn) {

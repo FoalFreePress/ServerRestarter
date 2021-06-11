@@ -26,13 +26,21 @@ package org.sweetiebelle.serverrestart;
 
 import java.util.TimerTask;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.StringTextComponent;
+
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class KillServerTask extends TimerTask {
 
     @Override
     public void run() {
-        ServerLifecycleHooks.getCurrentServer().halt(false);
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        StringTextComponent message = new StringTextComponent("Server is restarting!");
+        for(ServerPlayerEntity player : server.getPlayerList().getPlayers())
+            player.connection.disconnect(message);
+        server.halt(false);
     }
 
 }
