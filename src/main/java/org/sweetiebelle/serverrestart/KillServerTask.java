@@ -24,6 +24,7 @@
 
 package org.sweetiebelle.serverrestart;
 
+import java.util.Collections;
 import java.util.TimerTask;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -38,7 +39,7 @@ public class KillServerTask extends TimerTask {
     public void run() {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         StringTextComponent message = new StringTextComponent("Server is restarting!");
-        for(ServerPlayerEntity player : server.getPlayerList().getPlayers())
+        for(ServerPlayerEntity player : Collections.unmodifiableList(server.getPlayerList().getPlayers()))
             player.connection.disconnect(message);
         server.halt(false);
     }
