@@ -122,33 +122,15 @@ dependencies {
     minecraft 'net.minecraftforge:forge:' + minecraft_version + '-' + forge_version
 }
 
-// process mods.toml to inject variables
-def modsTomlSpec = copySpec{
-    from(sourceSets.main.resources) {
-        include 'META-INF/mods.toml'
-        expand 'version': artifact_version,
-            'loader_range': loader_range,
-            'minecraft_range': minecraft_range,
-            'forge_range': forge_range
-    }
-}
-
-// task to add mods.toml to all relevant folders
-task replaceResources {
-    // ensure directory exists, first build likes to fail
-    new File("${processResources.destinationDir}/META-INF").mkdirs()
-    // copy for gradle
-    copy {
-        outputs.upToDateWhen { false }
-        with modsTomlSpec
-        into processResources.destinationDir
-    }
-}
-
 processResources {
-    exclude 'META-INF/mods.toml'
-    finalizedBy replaceResources
+  filesMatching("META-INF/mods.toml") {
+    expand 'version': artifact_version,
+           'loader_range': loader_range,
+           'minecraft_range': minecraft_range,
+           'forge_range': forge_range
+  }
 }
+
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
