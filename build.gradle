@@ -1,4 +1,4 @@
-import net.minecraftforge.gradle.common.task.SignJar
+import net.minecraftforge.gradle.common.tasks.SignJar
 
 buildscript {
     repositories {
@@ -7,22 +7,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 plugins {
-    id 'net.minecrell.licenser' version '0.4'
+    id 'org.cadixdev.licenser' version '0.6.1'
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'net.minecrell.licenser'
 
 group = 'org.sweetiebelle.serverrestart'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 // sets version to the slimeKnights version format
 // serverrestart isn't slimeKnights, but they have a good format.
@@ -185,10 +184,10 @@ license {
     // exclude 'org/sweetiebelle/example'
     tasks {
         main {
-            files = files("$rootDir/src/main/java")
+            files.from files("$rootDir/src/main/java")
         }
         test {
-            files = files("$rootDir/src/test/java")
+            files.from files("$rootDir/src/test/java")
         }
     }
 }

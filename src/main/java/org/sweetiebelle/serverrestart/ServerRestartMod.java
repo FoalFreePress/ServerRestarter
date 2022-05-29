@@ -40,6 +40,7 @@ import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 
 @Mod(ServerRestartMod.MOD_ID)
@@ -56,7 +57,7 @@ public class ServerRestartMod {
     }
 
     @SubscribeEvent
-    public void onServerFinished(FMLServerStartedEvent event) {
+    public void onServerStarted(FMLServerStartedEvent event) {
         final long shutdownIn = Config.SERVER.shutdownLength.get() * 1000;
 
         timer.schedule(new KillServerTask(), shutdownIn);
@@ -65,6 +66,11 @@ public class ServerRestartMod {
 
         
         Utility.from(Config.SERVER.shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
+    }
+    
+    @SubscribeEvent
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        timer.cancel();
     }
 
     private void printLog(long shutdownIn) {
