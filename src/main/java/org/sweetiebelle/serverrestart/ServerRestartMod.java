@@ -76,6 +76,6 @@ public class ServerRestartMod {
     private void printLog(long shutdownIn) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getDefault());
-        LOGGER.info(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
+        LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
     }
 }
