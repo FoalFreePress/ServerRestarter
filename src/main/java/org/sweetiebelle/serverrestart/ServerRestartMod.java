@@ -33,7 +33,8 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import org.sweetiebelle.serverrestart.discord.DiscordPoster;
+import org.sweetiebelle.serverrestart.discord.EmbedObject;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -54,22 +55,24 @@ public class ServerRestartMod {
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         timer = new Timer();
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     @SubscribeEvent
     public void onServerStarted(FMLServerStartedEvent event) {
-        final long shutdownIn = Config.SERVER.shutdownLength.get() * 1000;
+        final long shutdownIn = Config.SERVER.s_shutdownLength.get() * 1000;
 
         timer.schedule(new KillServerTask(), shutdownIn);
 
         printLog(shutdownIn);
 
-        
-        Utility.from(Config.SERVER.shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
+        Utility.from(Config.SERVER.s_shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
     }
-    
+
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
+        EmbedObject embed = new EmbedObject("The server has shut down!", null);
+        DiscordPoster.postEmbed(embed);
         timer.cancel();
     }
 
@@ -77,5 +80,9 @@ public class ServerRestartMod {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getDefault());
         LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
+        
+        String startupMessage = Config.SERVER.d_startupMessage.get();
+        EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:F>", ((System.currentTimeMillis() + shutdownIn) / 1000)), "null".equals(startupMessage) ? null : startupMessage);
+        DiscordPoster.postEmbed(embed);
     }
 }

@@ -29,6 +29,9 @@ import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
+import org.sweetiebelle.serverrestart.discord.DiscordPoster;
+import org.sweetiebelle.serverrestart.discord.EmbedObject;
+
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.Color;
@@ -50,6 +53,7 @@ public class AnnounceTask extends TimerTask {
     @Override
     public void run() {
         ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message).withStyle(STYLE), ChatType.SYSTEM, Util.NIL_UUID);
+        DiscordPoster.postEmbed(new EmbedObject(message, null));
     }
 
 }
