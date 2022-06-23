@@ -50,8 +50,8 @@ public class Config {
     }
 
     public static void load() {
-        ModLoadingContext.get().registerConfig(Type.SERVER, Config.SERVER_SPEC);
-        ModLoadingContext.get().registerConfig(Type.SERVER, Config.WEBHOOK_SPEC, String.format("%s-%s.toml", ServerRestartMod.MOD_ID, "discord-webhook"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestartMod.MOD_ID, "general"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestartMod.MOD_ID, "discord-webhook"));
     }
 
     public static class ServerConfig {
@@ -69,7 +69,6 @@ public class Config {
         ServerConfig(Builder builder) {
             // Server Restart Values
             builder.push("restart");
-            s_shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
             s_shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
             builder.pop();
 
@@ -86,20 +85,6 @@ public class Config {
 
         }
 
-        private ArrayList<String> getDefaultShutdownMessages() {
-            ArrayList<String> map = new ArrayList<String>();
-            map.add("3600|The server will restart in 60 minutes.");
-            map.add("900|The server will restart in 15 minutes.");
-            map.add("300|The server will restart in 5 minutes.");
-            map.add("15|Restarting in 15 seconds...");
-            map.add("5|Restarting in 5 seconds...");
-            map.add("4|Restarting in 4 seconds...");
-            map.add("3|Restarting in 3 seconds...");
-            map.add("2|Restarting in 2 seconds...");
-            map.add("1|Restarting in 1 second...");
-            map.add("0|Server restarting now!");
-            return map;
-        }
     }
 
     public static class WebhookConfig {

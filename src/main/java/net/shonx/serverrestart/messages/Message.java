@@ -22,19 +22,23 @@
  * SOFTWARE.
  */
 
-package net.shonx.serverrestart;
+package net.shonx.serverrestart.messages;
 
-public class ShutdownMessage implements Comparable<ShutdownMessage> {
+public class Message implements Comparable<Message> {
+    public String name;
     public String message;
     public Long time;
+    public Boolean announceToDiscord;
 
-    public ShutdownMessage(long time, String message) {
+    public Message(String name, long time, String message, boolean announceToDiscord) {
+        this.name = name;
         this.time = time;
         this.message = message;
+        this.announceToDiscord = announceToDiscord;
     }
 
     @Override
-    public int compareTo(ShutdownMessage o) {
+    public int compareTo(Message o) {
         return time.compareTo(o.time);
     }
 }

@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 
 import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
+import net.shonx.serverrestart.messages.Message;
 
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
@@ -42,18 +43,19 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class AnnounceTask extends TimerTask {
 
-    private String message;
+    private Message message;
     private static final Color COLOR = Color.fromRgb(16711935); // #FF00FF
     private static final Style STYLE = Style.EMPTY.withColor(COLOR).withFont(Style.DEFAULT_FONT);
 
-    public AnnounceTask(@Nonnull String message) {
+    public AnnounceTask(@Nonnull Message message) {
         this.message = Objects.requireNonNull(message);
     }
 
     @Override
     public void run() {
-        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message).withStyle(STYLE), ChatType.SYSTEM, Util.NIL_UUID);
-        DiscordPoster.postEmbed(new EmbedObject(message, null));
+        ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message.message).withStyle(STYLE), ChatType.SYSTEM, Util.NIL_UUID);
+        if (message.announceToDiscord)
+            DiscordPoster.postEmbed(new EmbedObject(message.message, null));
     }
 
 }

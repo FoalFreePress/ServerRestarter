@@ -25,6 +25,7 @@
 package net.shonx.serverrestart;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
@@ -36,6 +37,8 @@ import org.apache.logging.log4j.Logger;
 
 import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
+import net.shonx.serverrestart.messages.Message;
+import net.shonx.serverrestart.messages.MessageLoader;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,6 +54,7 @@ public class ServerRestartMod {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
     private Timer timer;
+    private ArrayList<Message> messages;
 
     public ServerRestartMod() {
         Config.load();
@@ -67,8 +71,8 @@ public class ServerRestartMod {
         timer.schedule(new KillServerTask(), shutdownIn);
 
         printLog(shutdownIn);
-
-        Utility.from(Config.SERVER.s_shutdownMessages.get()).forEach(message -> timer.schedule(new AnnounceTask(message.message), shutdownIn - message.time * 1000L));
+        messages = MessageLoader.loadMessages();
+        messages.forEach(message -> timer.schedule(new AnnounceTask(message), shutdownIn - message.time * 1000L));
     }
 
     @SubscribeEvent

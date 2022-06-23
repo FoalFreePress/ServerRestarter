@@ -1,0 +1,62 @@
+[
+  {
+    "name":"1 Hour",
+    "time":3600,
+    "message":"The server will restart in 60 minutes.",
+    "announceToDiscord":true
+  },
+  {
+    "name":"15 Minutes",
+    "time":900,
+    "message":"The server will restart in 15 minutes.",
+    "announceToDiscord":true
+  },
+  {
+    "name":"5 Minutes",
+    "time":300,
+    "message":"The server will restart in 5 minutes.",
+    "announceToDiscord":true
+  },
+  {
+    "name":"15 Seconds",
+    "time":15,
+    "message":"The server will restart in 15 seconds.",
+    "announceToDiscord":true
+  },
+  {
+    "name":"5 Seconds",
+    "time":5,
+    "message":"Restarting in 5 seconds...",
+    "announceToDiscord":true
+  },
+  {
+    "name":"4 Seconds",
+    "time":4,
+    "message":"Restarting in 4 seconds...",
+    "announceToDiscord":true
+  },
+  {
+    "name":"3 Seconds",
+    "time":3,
+    "message":"Restarting in 3 seconds...",
+    "announceToDiscord":true
+  },
+  {
+    "name":"2 Seconds",
+    "time":2,
+    "message":"Restarting in 2 seconds...",
+    "announceToDiscord":true
+  },
+  {
+    "name":"1 Second",
+    "time":1,
+    "message":"Restarting in 1 second...",
+    "announceToDiscord":true
+  },
+  {
+    "name":"0 Seconds",
+    "time":0,
+    "message":"Server restarting now!",
+    "announceToDiscord":true
+  }
+]
