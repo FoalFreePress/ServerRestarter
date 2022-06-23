@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart.discord;
+package net.shonx.serverrestart.discord;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +30,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.sweetiebelle.serverrestart.Config;
-import org.sweetiebelle.serverrestart.ServerRestartMod;
+import net.shonx.serverrestart.Config;
+import net.shonx.serverrestart.ServerRestartMod;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

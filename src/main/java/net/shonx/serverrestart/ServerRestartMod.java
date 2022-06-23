@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,8 +33,8 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.sweetiebelle.serverrestart.discord.DiscordPoster;
-import org.sweetiebelle.serverrestart.discord.EmbedObject;
+import net.shonx.serverrestart.discord.DiscordPoster;
+import net.shonx.serverrestart.discord.EmbedObject;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;

@@ -22,19 +22,26 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
-public class ShutdownMessage implements Comparable<ShutdownMessage> {
-    public String message;
-    public Long time;
+import java.util.ArrayList;
+import java.util.TimerTask;
 
-    public ShutdownMessage(long time, String message) {
-        this.time = time;
-        this.message = message;
-    }
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.StringTextComponent;
+
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+
+public class KillServerTask extends TimerTask {
 
     @Override
-    public int compareTo(ShutdownMessage o) {
-        return time.compareTo(o.time);
+    public void run() {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        StringTextComponent message = new StringTextComponent("Server is restarting!");
+        for(ServerPlayerEntity player : new ArrayList<ServerPlayerEntity>(server.getPlayerList().getPlayers()))
+            player.connection.disconnect(message);
+        server.halt(false);
     }
+
 }

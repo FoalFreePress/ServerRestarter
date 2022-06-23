@@ -19,7 +19,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-group = 'org.sweetiebelle.serverrestart'
+group = 'net.shonx.serverrestart'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 

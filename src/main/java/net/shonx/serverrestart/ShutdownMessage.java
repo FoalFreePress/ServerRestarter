@@ -22,24 +22,19 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
-import java.util.ArrayList;
+public class ShutdownMessage implements Comparable<ShutdownMessage> {
+    public String message;
+    public Long time;
 
-public class Utility {
-
-    static ArrayList<ShutdownMessage> from(ArrayList<String> oldMessages) {
-        ArrayList<ShutdownMessage> messages = new ArrayList<ShutdownMessage>(oldMessages.size());
-        for (String message : oldMessages)
-            messages.add(Utility.from(message));
-        return messages;
+    public ShutdownMessage(long time, String message) {
+        this.time = time;
+        this.message = message;
     }
 
-    static ShutdownMessage from(String combined) {
-        String[] parts = combined.split("\\|");
-        if (parts.length != 2)
-            throw new IllegalArgumentException("Bad format. String contains multiple pipe characters.");
-        return new ShutdownMessage(Long.valueOf(parts[0]), parts[1]);
+    @Override
+    public int compareTo(ShutdownMessage o) {
+        return time.compareTo(o.time);
     }
-
 }

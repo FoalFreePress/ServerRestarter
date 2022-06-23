@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart.discord;
+package net.shonx.serverrestart.discord;
 
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.sweetiebelle.serverrestart.Config;
+import net.shonx.serverrestart.Config;
 
 public class EmbedObject {
     @Nullable

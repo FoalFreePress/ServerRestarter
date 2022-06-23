@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart.discord;
+package net.shonx.serverrestart.discord;
 
 import java.lang.reflect.Type;
 import java.sql.Date;

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
 import java.util.ArrayList;
 import org.apache.commons.lang3.tuple.Pair;

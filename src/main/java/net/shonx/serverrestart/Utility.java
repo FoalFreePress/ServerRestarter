@@ -22,26 +22,24 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.StringTextComponent;
+public class Utility {
 
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+    static ArrayList<ShutdownMessage> from(ArrayList<String> oldMessages) {
+        ArrayList<ShutdownMessage> messages = new ArrayList<ShutdownMessage>(oldMessages.size());
+        for (String message : oldMessages)
+            messages.add(Utility.from(message));
+        return messages;
+    }
 
-public class KillServerTask extends TimerTask {
-
-    @Override
-    public void run() {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        StringTextComponent message = new StringTextComponent("Server is restarting!");
-        for(ServerPlayerEntity player : new ArrayList<ServerPlayerEntity>(server.getPlayerList().getPlayers()))
-            player.connection.disconnect(message);
-        server.halt(false);
+    static ShutdownMessage from(String combined) {
+        String[] parts = combined.split("\\|");
+        if (parts.length != 2)
+            throw new IllegalArgumentException("Bad format. String contains multiple pipe characters.");
+        return new ShutdownMessage(Long.valueOf(parts[0]), parts[1]);
     }
 
 }

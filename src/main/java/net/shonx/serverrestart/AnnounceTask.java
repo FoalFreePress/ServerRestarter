@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-package org.sweetiebelle.serverrestart;
+package net.shonx.serverrestart;
 
 import java.util.Objects;
 import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
-import org.sweetiebelle.serverrestart.discord.DiscordPoster;
-import org.sweetiebelle.serverrestart.discord.EmbedObject;
+import net.shonx.serverrestart.discord.DiscordPoster;
+import net.shonx.serverrestart.discord.EmbedObject;
 
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ChatType;
