@@ -162,8 +162,8 @@ artifacts {
 license {
     header = file("$rootDir/LICENSE.txt")
 
-    include 'org/sweetiebelle/'
-    // exclude 'org/sweetiebelle/example'
+    include 'net/shonx/'
+    // exclude 'net/shonx/example'
     tasks {
         main {
             files.from files("$rootDir/src/main/java")
