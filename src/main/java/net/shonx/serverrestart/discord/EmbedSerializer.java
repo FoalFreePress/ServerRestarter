@@ -45,7 +45,7 @@ public class EmbedSerializer implements JsonSerializer<EmbedObject> {
             result.add("username", new JsonPrimitive(src.username));
         if (src.avatarUrl != null)
             result.add("avatar_url", new JsonPrimitive(src.avatarUrl));
-        if(src.content != null)
+        if (src.content != null)
             result.add("content", new JsonPrimitive(src.content));
         //
         // EMBED JSON

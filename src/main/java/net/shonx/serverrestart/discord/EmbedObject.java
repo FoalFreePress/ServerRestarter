@@ -61,13 +61,13 @@ public class EmbedObject {
             this.avatarUrl = null;
         else
             this.avatarUrl = avatarUrl;
-        
+
         // Content
         this.content = content;
 
         // Color
         // Cannot be null, it's an int.
-        this.color = Config.SERVER.d_embed_color.get();
+        color = Config.SERVER.d_embed_color.get();
 
         // Footer Text
         String footerText = Config.SERVER.d_embed_footer_text.get();
@@ -81,6 +81,6 @@ public class EmbedObject {
             this.footerUrl = null;
         else
             this.footerUrl = footerUrl;
-        this.embed_description = Objects.requireNonNull(message);
+        embed_description = Objects.requireNonNull(message);
     }
 }

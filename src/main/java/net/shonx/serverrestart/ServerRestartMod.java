@@ -33,8 +33,10 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.shonx.serverrestart.discord.DiscordPoster;
 import net.shonx.serverrestart.discord.EmbedObject;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -66,7 +68,7 @@ public class ServerRestartMod {
 
         printLog(shutdownIn);
 
-        Utility.from(Config.SERVER.s_shutdownMessages.get()).forEach((message) -> timer.schedule(new AnnounceTask(message.message), shutdownIn - (message.time * 1000L)));
+        Utility.from(Config.SERVER.s_shutdownMessages.get()).forEach(message -> timer.schedule(new AnnounceTask(message.message), shutdownIn - message.time * 1000L));
     }
 
     @SubscribeEvent
@@ -80,9 +82,9 @@ public class ServerRestartMod {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getDefault());
         LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
-        
+
         String startupMessage = Config.SERVER.d_startupMessage.get();
-        EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:F>", ((System.currentTimeMillis() + shutdownIn) / 1000)), "null".equals(startupMessage) ? null : startupMessage);
+        EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:T>", (System.currentTimeMillis() + shutdownIn) / 1000), "null".equals(startupMessage) ? null : startupMessage);
         DiscordPoster.postEmbed(embed);
     }
 }

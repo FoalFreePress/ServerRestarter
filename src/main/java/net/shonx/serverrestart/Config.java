@@ -25,6 +25,7 @@
 package net.shonx.serverrestart;
 
 import java.util.ArrayList;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -40,10 +41,10 @@ public class Config {
     public static final WebhookConfig WEBHOOK;
 
     static {
-        Pair<ServerConfig, ForgeConfigSpec> serverPair = (new Builder()).configure(Config.ServerConfig::new);
+        Pair<ServerConfig, ForgeConfigSpec> serverPair = new Builder().configure(Config.ServerConfig::new);
         SERVER_SPEC = serverPair.getRight();
         SERVER = serverPair.getLeft();
-        Pair<WebhookConfig, ForgeConfigSpec> webhookPair = (new Builder()).configure(Config.WebhookConfig::new);
+        Pair<WebhookConfig, ForgeConfigSpec> webhookPair = new Builder().configure(Config.WebhookConfig::new);
         WEBHOOK_SPEC = webhookPair.getRight();
         WEBHOOK = webhookPair.getLeft();
     }
@@ -68,19 +69,19 @@ public class Config {
         ServerConfig(Builder builder) {
             // Server Restart Values
             builder.push("restart");
-            this.s_shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
-            this.s_shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
+            s_shutdownMessages = builder.comment("List of Strings and delay before announcement.").define("shutdownMessages", getDefaultShutdownMessages());
+            s_shutdownLength = builder.comment("Time in seconds before the server will restart.").defineInRange("shutdownLength", 60L * 60 * 6, 60L, Long.MAX_VALUE / 1000);
             builder.pop();
 
             // Discord embed Values
             builder.push("discord");
 
-            this.d_startupMessage = builder.comment("The string to send when the server first starts. Mentions are allowed here.").define("startupMessage", "null");
-            this.d_serverUserName = builder.comment("The name of the webhook to send to Discord. Use \"null\" to disable.").define("serverName", "Server");
-            this.d_avatarUrl = builder.comment("The URL to use for the webhook avatar. Use \"null\" to disable.").define("avatarUrl", "null");
-            this.d_embed_color = builder.comment("The color to use for the Discord embed.").defineInRange("embedColor", 15258703, 0, 16777215);
-            this.d_embed_footer_text = builder.comment("The comment to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterText", "Server Restart Notification");
-            this.d_embed_footer_url = builder.comment("The image URL to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterUrl", "null");
+            d_startupMessage = builder.comment("The string to send when the server first starts. Mentions are allowed here.").define("startupMessage", "null");
+            d_serverUserName = builder.comment("The name of the webhook to send to Discord. Use \"null\" to disable.").define("serverName", "Server");
+            d_avatarUrl = builder.comment("The URL to use for the webhook avatar. Use \"null\" to disable.").define("avatarUrl", "null");
+            d_embed_color = builder.comment("The color to use for the Discord embed.").defineInRange("embedColor", 15258703, 0, 16777215);
+            d_embed_footer_text = builder.comment("The comment to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterText", "Server Restart Notification");
+            d_embed_footer_url = builder.comment("The image URL to show in the Discord embed Footer. Use \"null\" to disable.").define("embedFooterUrl", "null");
             builder.pop();
 
         }
@@ -106,7 +107,7 @@ public class Config {
 
         WebhookConfig(Builder builder) {
             builder.push("discord");
-            this.d_webhook_url = builder.comment("The Discord webhook URL. Use \"null\" to disable.").define("webhook", "null");
+            d_webhook_url = builder.comment("The Discord webhook URL. Use \"null\" to disable.").define("webhook", "null");
             builder.pop();
         }
     }
