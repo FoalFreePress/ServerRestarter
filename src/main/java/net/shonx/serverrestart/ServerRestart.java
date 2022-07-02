@@ -115,10 +115,11 @@ public class ServerRestart {
     private void printLog(long shutdownIn) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getDefault());
-        LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(System.currentTimeMillis() + shutdownIn))));
+        long shutdownAtInMillis = System.currentTimeMillis() + (shutdownIn * 1000L);
+        LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(shutdownAtInMillis))));
 
         String startupMessage = Config.SERVER.d_startupMessage.get();
-        EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:T>", (System.currentTimeMillis() + shutdownIn) / 1000), "null".equals(startupMessage) ? null : startupMessage);
+        EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:T>", shutdownAtInMillis / 1000L), "null".equals(startupMessage) ? null : startupMessage);
         DiscordPoster.postEmbed(embed);
     }
 }
