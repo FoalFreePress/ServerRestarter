@@ -70,7 +70,7 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
-            
+
             args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
@@ -86,7 +86,7 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
-            
+
             args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
@@ -104,7 +104,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             args '--mod', 'serverrestart', '--all', '--output', file('src/main/generated/'), '--existing', file('src/main/resources/')
-            
+
             args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
@@ -154,7 +154,6 @@ processResources {
            'forge_range': forge_range
   }
 }
-
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
@@ -223,6 +222,7 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
     builtBy 'reobfJar'
 }
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
