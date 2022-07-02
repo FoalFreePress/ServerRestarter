@@ -3,11 +3,13 @@ import net.minecraftforge.gradle.common.tasks.SignJar
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         jcenter()
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -16,6 +18,7 @@ plugins {
     id 'org.cadixdev.licenser' version '0.6.1'
 }
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
@@ -67,6 +70,8 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
+            
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -81,6 +86,8 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
 
             property 'forge.logging.console.level', 'debug'
+            
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -97,6 +104,8 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             args '--mod', 'serverrestart', '--all', '--output', file('src/main/generated/'), '--existing', file('src/main/resources/')
+            
+            args '--mixin.config', 'serverrestart.mixins.json'
 
             mods {
                 serverrestart {
@@ -118,6 +127,10 @@ sourceSets {
     }
 }
 
+mixin {
+	add sourceSets.main, "serverrestart.mixins.json"
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:' + minecraft_version + '-' + forge_version
 }
@@ -136,6 +149,7 @@ processResources {
 jar {
     manifest {
         attributes([
+        	"MixinConfigs": "serverrestart.mixins.json",
             "Specification-Title": "serverrestart",
             "Specification-Vendor": "shroomdog27",
             "Specification-Version": "1", // We are version 1 of ourselves

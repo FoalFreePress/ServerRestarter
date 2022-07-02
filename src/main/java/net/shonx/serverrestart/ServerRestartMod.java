@@ -75,6 +75,16 @@ public class ServerRestartMod {
         messages.forEach(message -> timer.schedule(new AnnounceTask(message), shutdownIn - message.time * 1000L));
     }
 
+    public static final void onServerCrash() {
+        try {
+            EmbedObject embed = new EmbedObject("💥 Oh no! The sever has crashed! 💥", null);
+            embed.color = 16711680;
+            DiscordPoster.postEmbed(embed);
+        } catch (Throwable ignored) {
+            // Server is already crashing... don't make it worse
+        }
+    }
+
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
         EmbedObject embed = new EmbedObject("The server has shut down!", null);
