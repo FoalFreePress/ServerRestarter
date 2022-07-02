@@ -34,7 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.shonx.serverrestart.Config;
-import net.shonx.serverrestart.ServerRestartMod;
+import net.shonx.serverrestart.ServerRestart;
 
 public class DiscordPoster {
     private static final String stringUrl = Config.WEBHOOK.d_webhook_url.get();
@@ -67,7 +67,7 @@ public class DiscordPoster {
 
         } catch (IOException e) {
             // Doesn't affect us really...
-            ServerRestartMod.LOGGER.error("Error in Discord I/O", e);
+            ServerRestart.LOGGER.error("Error in Discord I/O", e);
         }
     }
 }

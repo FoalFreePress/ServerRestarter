@@ -36,7 +36,7 @@ import java.util.Arrays;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
-import net.shonx.serverrestart.ServerRestartMod;
+import net.shonx.serverrestart.ServerRestart;
 
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -50,7 +50,7 @@ public class MessageLoader {
             Arrays.sort(messages);
             return Lists.newArrayList(messages);
         } catch (IOException e) {
-            ServerRestartMod.LOGGER.error("Error in Message JSON I/O", e);
+            ServerRestart.LOGGER.error("Error in Message JSON I/O", e);
             return new ArrayList<Message>();
         }
     }
@@ -60,7 +60,7 @@ public class MessageLoader {
         // FMLPaths.CONFIGDIR.get().resolve(Paths.get(ServerRestartMod.MOD_ID,
         // "messages.json")).toFile();
 
-        File jsonFile = new File(FMLPaths.CONFIGDIR.get().toAbsolutePath().toFile(), String.format("%s/%s", ServerRestartMod.MOD_ID, "messages.json"));
+        File jsonFile = new File(FMLPaths.CONFIGDIR.get().toAbsolutePath().toFile(), String.format("%s/%s", ServerRestart.MOD_ID, "messages.json"));
         if (jsonFile.exists())
             return jsonFile;
         URL defaultFile = MessageLoader.class.getResource("/default-messages.json");

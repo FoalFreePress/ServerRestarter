@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.shonx.serverrestart.ServerRestartMod;
+import net.shonx.serverrestart.ServerRestart;
 
 import net.minecraft.crash.CrashReport;
 import net.minecraft.server.MinecraftServer;
@@ -40,6 +40,6 @@ public abstract class CrashHookMixin {
 
     @Inject(method = "onServerCrash", at = @At("HEAD"))
     private void onServerCrash(CrashReport crash, CallbackInfo info) {
-        ServerRestartMod.onServerCrash();
+        ServerRestart.onServerCrash();
     }
 }

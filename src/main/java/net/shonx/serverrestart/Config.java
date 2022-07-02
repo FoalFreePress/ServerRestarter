@@ -50,8 +50,8 @@ public class Config {
     }
 
     public static void load() {
-        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestartMod.MOD_ID, "general"));
-        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestartMod.MOD_ID, "discord-webhook"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "general"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "discord-webhook"));
     }
 
     public static class ServerConfig {

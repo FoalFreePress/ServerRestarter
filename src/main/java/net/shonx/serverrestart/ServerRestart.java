@@ -59,14 +59,14 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
-@Mod(ServerRestartMod.MOD_ID)
-public class ServerRestartMod {
+@Mod(ServerRestart.MOD_ID)
+public class ServerRestart {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
     private ScheduledThreadPoolExecutor timer;
     private ArrayList<Message> messages;
 
-    public ServerRestartMod() {
+    public ServerRestart() {
         Config.load();
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
         timer = new ScheduledThreadPoolExecutor(1);
