@@ -28,7 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.Timer;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,6 +41,14 @@ import net.shonx.serverrestart.discord.EmbedObject;
 import net.shonx.serverrestart.messages.Message;
 import net.shonx.serverrestart.messages.MessageLoader;
 
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ExtensionPoint;
@@ -48,31 +57,42 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 @Mod(ServerRestartMod.MOD_ID)
 public class ServerRestartMod {
     public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
-    private Timer timer;
+    private ScheduledThreadPoolExecutor timer;
     private ArrayList<Message> messages;
 
     public ServerRestartMod() {
         Config.load();
         ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of((Supplier<String>) () -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-        timer = new Timer();
+        timer = new ScheduledThreadPoolExecutor(1);
         MinecraftForge.EVENT_BUS.register(this);
 
     }
 
     @SubscribeEvent
     public void onServerStarted(FMLServerStartedEvent event) {
-        final long shutdownIn = Config.SERVER.s_shutdownLength.get() * 1000;
+        final long shutdownIn = Config.SERVER.s_shutdownLength.get();
 
-        timer.schedule(new KillServerTask(), shutdownIn);
+        timer.schedule(() -> {
+            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+            StringTextComponent message = new StringTextComponent("Server is restarting!");
+            for (ServerPlayerEntity player : new ArrayList<ServerPlayerEntity>(server.getPlayerList().getPlayers()))
+                player.connection.disconnect(message);
+            server.halt(false);
+        }, shutdownIn, TimeUnit.SECONDS);
 
         printLog(shutdownIn);
         messages = MessageLoader.loadMessages();
-        messages.forEach(message -> timer.schedule(new AnnounceTask(message), shutdownIn - message.time * 1000L));
+        messages.forEach(message -> timer.schedule(() -> {
+            ServerLifecycleHooks.getCurrentServer().getPlayerList().broadcastMessage(new StringTextComponent(message.message).withStyle(Style.EMPTY.withColor(Color.fromRgb(16711935)).withFont(Style.DEFAULT_FONT)), ChatType.SYSTEM, Util.NIL_UUID);
+            if (message.announceToDiscord)
+                DiscordPoster.postEmbed(new EmbedObject(message.message, null));
+        }, shutdownIn - message.time, TimeUnit.SECONDS));
     }
 
     public static final void onServerCrash() {
@@ -89,7 +109,7 @@ public class ServerRestartMod {
     public void onServerStopping(FMLServerStoppingEvent event) {
         EmbedObject embed = new EmbedObject("The server has shut down!", null);
         DiscordPoster.postEmbed(embed);
-        timer.cancel();
+        timer.shutdownNow();
     }
 
     private void printLog(long shutdownIn) {
