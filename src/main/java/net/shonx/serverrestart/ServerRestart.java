@@ -97,7 +97,7 @@ public class ServerRestart {
 
     public static final void onServerCrash() {
         try {
-            EmbedObject embed = new EmbedObject("💥 Oh no! The sever has crashed! 💥", null);
+            EmbedObject embed = new EmbedObject(":boom: Oh no! The sever has crashed! :boom:", null);
             embed.color = 16711680;
             DiscordPoster.postEmbed(embed);
         } catch (Throwable ignored) {
@@ -120,6 +120,7 @@ public class ServerRestart {
 
         String startupMessage = Config.SERVER.d_startupMessage.get();
         EmbedObject embed = new EmbedObject(String.format("Hey everyone! The server is up. It will restart at <t:%d:T>", shutdownAtInMillis / 1000L), "null".equals(startupMessage) ? null : startupMessage);
+        embed.color = 65280;
         DiscordPoster.postEmbed(embed);
     }
 }

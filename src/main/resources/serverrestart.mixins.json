@@ -4,7 +4,8 @@
 	"compatibilityLevel":"JAVA_8",
 	"refmap":"serverrestart.mixins.refmap.json",
 	"mixins":[
-		"CrashHookMixin"
+		"CrashHookMixin",
+		"WatchdogMixin"
 	],
 	"injectors":{
 		"defaultRequire":1
