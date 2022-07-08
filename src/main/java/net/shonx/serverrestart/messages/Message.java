@@ -25,10 +25,10 @@
 package net.shonx.serverrestart.messages;
 
 public class Message implements Comparable<Message> {
-    public String name;
-    public String message;
-    public Long time;
     public Boolean announceToDiscord;
+    public String message;
+    public String name;
+    public Long time;
 
     public Message(String name, long time, String message, boolean announceToDiscord) {
         this.name = name;

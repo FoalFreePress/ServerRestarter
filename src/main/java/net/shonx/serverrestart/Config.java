@@ -35,36 +35,17 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig.Type;
 
 public class Config {
-    public static final ServerConfig SERVER;
-    private static final ForgeConfigSpec SERVER_SPEC;
-    private static final ForgeConfigSpec WEBHOOK_SPEC;
-    public static final WebhookConfig WEBHOOK;
-
-    static {
-        Pair<ServerConfig, ForgeConfigSpec> serverPair = new Builder().configure(Config.ServerConfig::new);
-        SERVER_SPEC = serverPair.getRight();
-        SERVER = serverPair.getLeft();
-        Pair<WebhookConfig, ForgeConfigSpec> webhookPair = new Builder().configure(Config.WebhookConfig::new);
-        WEBHOOK_SPEC = webhookPair.getRight();
-        WEBHOOK = webhookPair.getLeft();
-    }
-
-    public static void load() {
-        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "general"));
-        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "discord-webhook"));
-    }
-
     public static class ServerConfig {
 
-        public ConfigValue<ArrayList<String>> s_shutdownMessages;
-        public ConfigValue<Long> s_shutdownLength;
-
-        public ConfigValue<String> d_startupMessage;
-        public ConfigValue<String> d_serverUserName;
         public ConfigValue<String> d_avatarUrl;
         public ConfigValue<Integer> d_embed_color;
+
         public ConfigValue<String> d_embed_footer_text;
         public ConfigValue<String> d_embed_footer_url;
+        public ConfigValue<String> d_serverUserName;
+        public ConfigValue<String> d_startupMessage;
+        public ConfigValue<Long> s_shutdownLength;
+        public ConfigValue<ArrayList<String>> s_shutdownMessages;
 
         ServerConfig(Builder builder) {
             // Server Restart Values
@@ -95,6 +76,27 @@ public class Config {
             d_webhook_url = builder.comment("The Discord webhook URL. Use \"null\" to disable.").define("webhook", "null");
             builder.pop();
         }
+    }
+
+    public static final ServerConfig SERVER;
+    public static final WebhookConfig WEBHOOK;
+
+    private static final ForgeConfigSpec SERVER_SPEC;
+
+    private static final ForgeConfigSpec WEBHOOK_SPEC;
+
+    static {
+        Pair<ServerConfig, ForgeConfigSpec> serverPair = new Builder().configure(Config.ServerConfig::new);
+        SERVER_SPEC = serverPair.getRight();
+        SERVER = serverPair.getLeft();
+        Pair<WebhookConfig, ForgeConfigSpec> webhookPair = new Builder().configure(Config.WebhookConfig::new);
+        WEBHOOK_SPEC = webhookPair.getRight();
+        WEBHOOK = webhookPair.getLeft();
+    }
+
+    public static void load() {
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.SERVER_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "general"));
+        ModLoadingContext.get().registerConfig(Type.COMMON, Config.WEBHOOK_SPEC, String.format("%s/%s.toml", ServerRestart.MOD_ID, "discord-webhook"));
     }
 
 }

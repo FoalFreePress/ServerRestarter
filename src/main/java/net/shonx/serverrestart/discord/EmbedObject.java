@@ -33,19 +33,19 @@ import net.shonx.serverrestart.Config;
 
 public class EmbedObject {
     @Nullable
-    public String username;
-    @Nullable
     public String avatarUrl;
+    @Nonnull
+    public int color;
     @Nullable
     public String content;
     @Nonnull
-    public int color;
+    public String embed_description;
     @Nullable
     public String footerText;
     @Nullable
     public String footerUrl;
-    @Nonnull
-    public String embed_description;
+    @Nullable
+    public String username;
 
     public EmbedObject(@Nonnull String message, @Nullable String content) {
         // Username

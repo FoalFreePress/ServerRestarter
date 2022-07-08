@@ -61,10 +61,22 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 @Mod(ServerRestart.MOD_ID)
 public class ServerRestart {
-    public static final String MOD_ID = "serverrestart";
     public static final Logger LOGGER = LogManager.getLogger();
-    private ScheduledThreadPoolExecutor timer;
+    public static final String MOD_ID = "serverrestart";
+
+    public static final void onServerCrash() {
+        try {
+            EmbedObject embed = new EmbedObject(":boom: Oh no! The sever has crashed! :boom:", null);
+            embed.color = 16711680;
+            DiscordPoster.postEmbed(embed);
+        } catch (Throwable ignored) {
+            // Server is already crashing... don't make it worse
+        }
+    }
+
     private ArrayList<Message> messages;
+
+    private ScheduledThreadPoolExecutor timer;
 
     public ServerRestart() {
         Config.load();
@@ -95,16 +107,6 @@ public class ServerRestart {
         }, shutdownIn - message.time, TimeUnit.SECONDS));
     }
 
-    public static final void onServerCrash() {
-        try {
-            EmbedObject embed = new EmbedObject(":boom: Oh no! The sever has crashed! :boom:", null);
-            embed.color = 16711680;
-            DiscordPoster.postEmbed(embed);
-        } catch (Throwable ignored) {
-            // Server is already crashing... don't make it worse
-        }
-    }
-
     @SubscribeEvent
     public void onServerStopping(FMLServerStoppingEvent event) {
         EmbedObject embed = new EmbedObject("The server has shut down!", null);
@@ -115,7 +117,7 @@ public class ServerRestart {
     private void printLog(long shutdownIn) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getDefault());
-        long shutdownAtInMillis = System.currentTimeMillis() + (shutdownIn * 1000L);
+        long shutdownAtInMillis = System.currentTimeMillis() + shutdownIn * 1000L;
         LOGGER.warn(String.format("Server will restart at %s.", format.format(new Date(shutdownAtInMillis))));
 
         String startupMessage = Config.SERVER.d_startupMessage.get();

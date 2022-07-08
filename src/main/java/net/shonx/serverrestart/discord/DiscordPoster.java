@@ -37,8 +37,8 @@ import net.shonx.serverrestart.Config;
 import net.shonx.serverrestart.ServerRestart;
 
 public class DiscordPoster {
-    private static final String stringUrl = Config.WEBHOOK.d_webhook_url.get();
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(EmbedObject.class, new EmbedSerializer()).create();
+    private static final String stringUrl = Config.WEBHOOK.d_webhook_url.get();
 
     public static void postEmbed(EmbedObject embed) {
         postEmbed(GSON.toJson(embed));

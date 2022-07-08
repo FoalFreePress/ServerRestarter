@@ -37,7 +37,6 @@ import net.minecraft.server.MinecraftServer;
 @Mixin(MinecraftServer.class)
 public abstract class CrashHookMixin {
 
-
     @Inject(method = "onServerCrash", at = @At("HEAD"))
     private void onServerCrash(CrashReport crash, CallbackInfo info) {
         ServerRestart.onServerCrash();
