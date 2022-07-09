@@ -66,7 +66,7 @@ public class ServerRestart {
 
     public static final void onServerCrash() {
         try {
-            EmbedObject embed = new EmbedObject(":boom: Oh no! The sever has crashed! :boom:", null);
+            EmbedObject embed = new EmbedObject(":boom: Oh no! The server has crashed! :boom:", null);
             embed.color = 16711680;
             DiscordPoster.postEmbed(embed);
         } catch (Throwable ignored) {
